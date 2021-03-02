@@ -4,7 +4,8 @@
   "description": "Some functions for pipedream scripts",
   "main": "lib/index.js",
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "test:coverage": "jest --coverage && tar -cf coverage.tar coverage && rm -rf coverage"
   },
   "author": "lucas59356 <lucas59356@gmail.com>",
   "license": "MIT",
