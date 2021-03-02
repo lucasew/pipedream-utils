@@ -1,0 +1,7 @@
+- Prefer pure functions.
+- Each function in its own folder with a `index.js`, `index.test.js` and `README.md`.
+- Automated tests for all functions.
+- Organization by domain (this can be iteractive, no problem).
+- No new external dependencies.
+- UNIX philosphy for functions: If the function do more than one thing or use a feature that can be shared among other functions or exposed you should create a separated function.
+- This is a thing for everyone, even you, so do the extra mile for quality and documentation.
