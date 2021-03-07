@@ -1,4 +1,7 @@
-# pipedream-utils
+# pipedream-utils 
+
+![github actions badge](https://img.shields.io/github/workflow/status/lucasew/pipedream-utils/Testing?label=tests)
+![npm version](https://img.shields.io/npm/v/pipedream-utils)
 
 Utilities and helper functions for [pipedream](https://pipedream.com)
 
