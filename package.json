@@ -1,6 +1,6 @@
 {
   "name": "pipedream-utils",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Some functions for pipedream scripts",
   "main": "lib/index.js",
   "scripts": {
