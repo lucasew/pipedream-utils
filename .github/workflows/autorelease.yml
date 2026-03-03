@@ -1,0 +1,74 @@
+name: Autorelease
+
+on:
+  push:
+    branches:
+    - main
+    tags:
+    - '*'
+  pull_request:
+    branches:
+    - main
+  workflow_dispatch:
+
+jobs:
+  autorelease:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+    - uses: actions/checkout@v5.0.1
+
+    - name: Setup git config
+      run: |
+        git config user.name actions-bot
+        git config user.email actions-bot@users.noreply.github.com
+
+    - uses: jdx/mise-action@v3
+
+    - name: Install
+      run: mise run install
+
+    - name: Codegen
+      run: mise run codegen
+
+    - name: Create PR if Difference
+      id: pr_check
+      if: github.event_name != 'pull_request'
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        if [[ -n "$(git status --porcelain)" ]]; then
+          git checkout -b updater-bot
+          git add -A
+          git commit -m "chore: updater script changes"
+          gh pr create --title "Updater: stuff changed" --body "Changes caused from update scripts" --head updater-bot
+          echo "PR created due to codegen changes." >> $GITHUB_STEP_SUMMARY
+          exit 1
+        fi
+
+    - name: CI
+      run: mise run ci
+
+    - name: Release
+      if: github.event_name != 'pull_request'
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        TAG: ${{ github.ref_name }}
+      run: |
+        if [[ $TAG == v* ]]; then
+          gh release create "$TAG" \
+            --title "Release $TAG" \
+            --generate-notes
+        fi
+
+    - name: Upload Artifacts
+      if: github.event_name != 'pull_request'
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        TAG: ${{ github.ref_name }}
+      run: |
+        if [[ $TAG == v* ]]; then
+          gh release upload "$TAG" coverage.tar --clobber
+        fi
