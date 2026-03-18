@@ -2,15 +2,29 @@
 node = "14.21.3"
 "npm:workspaced" = "0.1.0"
 
+[tasks.install]
+depends = ["install:*"]
+
 [tasks."install:dependencies"]
 run = "npm install"
 
+[tasks.test]
+depends = ["test:*"]
+
 [tasks."test:unit"]
 run = "npm run test"
-depends = ["install:dependencies"]
+
+[tasks."test:coverage"]
+run = "npm run test:coverage"
+
+[tasks.lint]
+depends = ["lint:*"]
 
 [tasks."lint:run"]
 run = "workspaced lint"
+
+[tasks.codegen]
+depends = ["codegen:*"]
 
 [tasks."codegen:run"]
 run = "echo 'No codegen'"

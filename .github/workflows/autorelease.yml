@@ -18,10 +18,10 @@ jobs:
           version: 2026.3.9
 
       - name: Install
-        run: mise run install:dependencies
+        run: mise run install
 
       - name: Codegen
-        run: mise run codegen:run
+        run: mise run codegen
 
       - name: PR if difference
         run: |
@@ -33,13 +33,10 @@ jobs:
           fi
 
       - name: CI
-        run: mise run test:unit
+        run: mise run test
 
       - name: Release
         run: echo "No release step"
-
-      - name: Coverage
-        run: npm run test:coverage
 
       - name: Artifacts
         uses: actions/upload-artifact@v7.0.0
