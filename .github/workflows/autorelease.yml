@@ -1,0 +1,48 @@
+name: Autorelease
+
+on:
+  push:
+    branches:
+      - '**'
+  pull_request:
+
+jobs:
+  autorelease:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4.1.7
+
+      - name: Install mise
+        uses: jdx/mise-action@v2.1.2
+        with:
+          version: 2024.9.4
+
+      - name: Install
+        run: mise run install:dependencies
+
+      - name: Codegen
+        run: mise run codegen:run
+
+      - name: PR if difference
+        run: |
+          if [[ -n $(git status --porcelain) ]]; then
+            echo "Changes detected after codegen. You should commit them."
+            git status
+            git diff
+            exit 1
+          fi
+
+      - name: CI
+        run: mise run test:unit
+
+      - name: Release
+        run: echo "No release step"
+
+      - name: Coverage
+        run: npm run test:coverage
+
+      - name: Artifacts
+        uses: actions/upload-artifact@v4.3.3
+        with:
+          name: coverage-report.tar
+          path: coverage.tar
