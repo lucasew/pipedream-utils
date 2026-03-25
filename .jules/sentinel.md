@@ -1,0 +1,1 @@
+- 2024-03-25: [HIGH] Unbounded array slicing in while loops causing infinite loops and Out-Of-Memory DoS.
